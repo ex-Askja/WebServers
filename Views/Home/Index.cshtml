@@ -1,0 +1,61 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <table class="table table-bordered mt-5">
+        <tr>
+            <td>CurrentDateTime</td>
+            <td>@Model.CurrentDateTime</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>TotalUsageTime</td>
+            <td>@Model.TotalUsageTime</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <th>VirtualServerId</th>
+            <th>CreateDateTime</th>
+            <th>RemoveDateTime</th>
+            <th>SelectedForRemove</th>
+            <th>Actions</th>
+        </tr>
+
+        @foreach(var Server in @Model.Servers)
+        {
+            <tr>
+                <td>@Server.VirtualServerId</td>
+                <td>@Server.CreateDateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+
+                @{
+                    if (Server.Removed) {
+                        <td>@Server.RemoveDateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    } else {
+                        <td></td>
+                    }
+                
+                    if (Server.SelectedForRemove) {
+                        <td>+</td>
+                    } else {
+                        <td></td>
+                    }
+                }
+
+                <td>
+                    <div class="btn-group" role="group" data-vid="@Server.VirtualServerId">
+                      <button type="button" class="btn btn-danger remove">Remove</button>
+                      <button type="button" class="btn btn-danger mark">Select For Remove</button>
+                    </div>
+                </td>
+            </tr>
+        }
+    </table>
+
+    <button type="button" class="btn btn-success add">Add</button>
+</div>
