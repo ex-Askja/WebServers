@@ -9,8 +9,10 @@ builder.Configuration.Bind("Project", new Config());
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddMvc();
-builder.Services.AddDbContext<AppDbContext>(context => {
-    context.UseSqlServer(Config.ConnectionString, config => {
+builder.Services.AddDbContext<AppDbContext>(context =>
+{
+    context.UseSqlServer(Config.ConnectionString, config =>
+    {
         config.CommandTimeout(600);
         config.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
     });

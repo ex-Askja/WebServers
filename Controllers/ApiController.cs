@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebServers.Domain.Interfaces;
+using WebServers.Domain.Models;
+using WebServers.Domain.Views;
 
 namespace WebServers.Controllers
 {
@@ -18,7 +20,7 @@ namespace WebServers.Controllers
         {
             var Server = _servers.GetById(Id);
 
-            if (Server != null)
+            if (Server != null && !Server.Removed && Server.SelectedForRemove)
             {
                 Server.SelectedForRemove = false;
                 Server.Removed = true;
@@ -37,7 +39,7 @@ namespace WebServers.Controllers
         {
             var Server = _servers.GetById(Id);
 
-            if (Server != null)
+            if (Server != null && !Server.Removed && !Server.SelectedForRemove)
             {
                 Server.SelectedForRemove = true;
                 Server.Removed = false;
@@ -63,6 +65,46 @@ namespace WebServers.Controllers
             _servers.Save();
 
             return new ObjectResult(new { type = "add", text = "Server added" });
+        }
+
+        public IActionResult Load()
+        {
+            var Now = DateTime.Now;
+
+            VirtualServers Model = new()
+            {
+                CurrentDateTime = Now.ToString("yyyy-MM-dd HH:mm:ss")
+            };
+
+            double TotalTime = 0;
+            var AllServers = _servers.GetAll() ?? new List<VirtualServer>();
+            var ResultServers = new List<VirtualServerView>();
+
+            foreach (var Server in AllServers)
+            {
+                if (Server.Removed)
+                {
+                    TotalTime += (Server.RemoveDateTime - Server.CreateDateTime).TotalSeconds;
+                }
+                else
+                {
+                    TotalTime += (Now - Server.CreateDateTime).TotalSeconds;
+                }
+
+                ResultServers.Add(new VirtualServerView()
+                {
+                    VirtualServerId = Server.VirtualServerId,
+                    CreateDateTime = Server.CreateDateTime.ToString("dd.MM.yyyy HH:mm:ss"),
+                    RemoveDateTime = Server.RemoveDateTime.ToString("dd.MM.yyyy HH:mm:ss"),
+                    Removed = Server.Removed,
+                    SelectedForRemove = Server.SelectedForRemove
+                });
+            }
+
+            Model.Servers = ResultServers;
+            Model.TotalUsageTime = new DateTime(TimeSpan.FromSeconds(TotalTime).Ticks).ToString("HH:mm:ss");
+
+            return new ObjectResult(Model);
         }
     }
 }

@@ -1,61 +1,43 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿<div class="card bg-white mt-5">
+    <div class="card-header">Virtual Servers</div>
 
-<div class="text-center">
-    <table class="table table-bordered mt-5">
-        <tr>
-            <td>CurrentDateTime</td>
-            <td>@Model.CurrentDateTime</td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>TotalUsageTime</td>
-            <td>@Model.TotalUsageTime</td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="btn btn-outline-success add">
+                    <i class="fab fa-plus"></i>
+                    Add new server
+                </button>
+            </div>
+        </div>
 
-        <tr>
-            <th>VirtualServerId</th>
-            <th>CreateDateTime</th>
-            <th>RemoveDateTime</th>
-            <th>SelectedForRemove</th>
-            <th>Actions</th>
-        </tr>
+        <div class="row">
+            <div class="col-12">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <td>CurrentDateTime</td>
+                            <td colspan="4" class="text-start currentTime"></td>
+                        </tr>
+                        <tr>
+                            <td>TotalUsageTime</td>
+                            <td colspan="4" class="text-start usageTime"></td>
+                        </tr>
 
-        @foreach(var Server in @Model.Servers)
-        {
-            <tr>
-                <td>@Server.VirtualServerId</td>
-                <td>@Server.CreateDateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <tr>
+                            <th>VirtualServerId</th>
+                            <th class="text-center">Create DateTime</th>
+                            <th class="text-center">Remove DateTime</th>
+                            <th class="text-center">Selected For Remove</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
 
-                @{
-                    if (Server.Removed) {
-                        <td>@Server.RemoveDateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                    } else {
-                        <td></td>
-                    }
-                
-                    if (Server.SelectedForRemove) {
-                        <td>+</td>
-                    } else {
-                        <td></td>
-                    }
-                }
+                    <tbody class="servers"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-                <td>
-                    <div class="btn-group" role="group" data-vid="@Server.VirtualServerId">
-                      <button type="button" class="btn btn-danger remove">Remove</button>
-                      <button type="button" class="btn btn-danger mark">Select For Remove</button>
-                    </div>
-                </td>
-            </tr>
-        }
-    </table>
-
-    <button type="button" class="btn btn-success add">Add</button>
+    <div class="card-footer text-muted text-center updated">Updated: ...</div>
 </div>
